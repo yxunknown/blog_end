@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hercats.dev.commonbase.mapper.UserMapper">
+    <resultMap id="user" type="com.hercats.dev.commonbase.model.User">
+        <id column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="brief" property="brief"/>
+        <association property="status" javaType="com.hercats.dev.commonbase.model.UserStatus">
+            <id column="status_id" property="id" />
+            <result column="status_description" property="description"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hercats.dev.commonbase.model.User">
+        insert into user
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="user.account != null">
+                account,
+            </if>
+            <if test="user.password != null">
+                password,
+            </if>
+            <if test="user.nickname != null">
+                nickname,
+            </if>
+            <if test="user.brief != null">
+                brief,
+            </if>
+            <if test="user.status != null">
+                status
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="user.account != null">
+                #{user.account},
+            </if>
+            <if test="user.password != null">
+                #{user.password},
+            </if>
+            <if test="user.nickname != null">
+                #{user.nickname},
+            </if>
+            <if test="user.brief != null">
+                #{user.brief},
+            </if>
+            <if test="user.status != null">
+                #{user.status.id}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="count" resultType="Long">
+        select count(*) from user
+    </select>
+
+    <select id="countByExample" resultType="Long">
+        select count(*) from user
+        <where>
+            <trim prefixOverrides="and">
+                <if test="user.nickname != null">
+                    and nickname=#{user.nickname}
+                </if>
+                <if test="user.brief != null">
+                    and brief=#{user.brief}
+                </if>
+                <if test="user.status != null">
+                    and nickname=#{user.status.id}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="select" parameterType="com.hercats.dev.commonbase.model.Pagination" resultMap="user">
+        select
+        account,
+        password,
+        nickname,
+        brief,
+        user_status.id as status_id,
+        user_status.description as status_description
+        from user
+        left join user_status on user.status = user_status.id
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="selectByExample" resultMap="user">
+        select
+        account,
+        password,
+        nickname,
+        brief,
+        user_status.id as status_id,
+        user_status.description as status_description
+        from user
+        <where>
+            <trim prefixOverrides="and">
+                <if test="user.nickname != null">
+                    and nickname=#{user.nickname}
+                </if>
+                <if test="user.brief != null">
+                    and brief=#{user.brief}
+                </if>
+                <if test="user.status != null">
+                    and status=#{user.status.id}
+                </if>
+            </trim>
+        </where>
+        limit #{pagination.start}, #{pagination.limit}
+        left join user_status on user.status = user_status.id
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="user">
+        select
+        account,
+        password,
+        nickname,
+        brief,
+        user_status.id as status_id,
+        user_status.description as status_description
+        from user
+        left join user_status on user.status = user_status.id
+        where account = #{account}
+    </select>
+
+    <update id="update" parameterType="com.hercats.dev.commonbase.model.User">
+        update user
+        <set>
+            <if test="user.nickname != null">
+                nickname = #{user.nickname},
+            </if>
+            <if test="user.brief != null">
+                brief = #{user.brief},
+            </if>
+            <if test="user.status != null">
+                status = #{user.status.id}
+            </if>
+        </set>
+        where account = #{user.account}
+    </update>
+
+    <delete id="deleteByPrimaryKey">
+        delete from user
+        where account = #{account}
+    </delete>
+
+    <delete id="deleteByExample">
+        <where>
+            <trim prefixOverrides="and">
+                <if test="user.nickname != null">
+                    and nickname=#{user.nickname}
+                </if>
+                <if test="user.brief != null">
+                    and brief=#{user.brief}
+                </if>
+                <if test="user.status != null">
+                    and status=#{user.status.id}
+                </if>
+            </trim>
+        </where>
+    </delete>
+
+
+</mapper>

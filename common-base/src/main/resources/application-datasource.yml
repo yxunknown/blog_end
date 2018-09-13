@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://45.77.16.125:3306/blog?characterEncoding=utf8&useSSL=true
+    username: blog
+    password: blog
+    name: blog
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    dbcp2:
+      min-idle: 5
+      initial-size: 5
+      max-wait-millis: 200
+      max-total: 5
