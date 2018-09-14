@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hercats.dev.commonbase.mapper.ArticleMapper">
+
+    <resultMap id="article" type="com.hercats.dev.commonbase.model.Article">
+
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="date_time" property="datetime"/>
+        <result column="tag" property="tag"/>
+        <!--the association need to placed after result-->
+        <association property="author" javaType="com.hercats.dev.commonbase.model.User">
+            <id column="user_account" property="account"/>
+            <result column="user_nickname" property="nickname"/>
+            <result column="user_brief" property="brief"/>
+        </association>
+
+        <association property="cover" javaType="com.hercats.dev.commonbase.model.Photo">
+            <id column="cover_id" property="id"/>
+            <result column="cover_path" property="path"/>
+            <result column="cover_description" property="description"/>
+            <result column="cover_latitude" property="latitude"/>
+            <result column="cover_longitude" property="longitude"/>
+            <result column="cover_md5" property="md5"/>
+            <result column="cover_date" property="uploadDate"/>
+        </association>
+
+        <association property="catalog" javaType="com.hercats.dev.commonbase.model.ArticleCatalog">
+            <id column="catalog_id" property="id"/>
+            <result column="catalog_catalog" property="catalog"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.hercats.dev.commonbase.model.Article">
+        insert into article
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="article.author.account != ''">
+                author,
+            </if>
+            <if test="article.title != ''">
+                title,
+            </if>
+            <if test="article.content != ''">
+                content,
+            </if>
+            <if test="article.datetime != null">
+                date_time,
+            </if>
+            <if test="article.cover.id != -1">
+                cover,
+            </if>
+            <if test="article.tag != ''">
+                tag,
+            </if>
+            <if test="article.catalog.id != -1">
+                "catalog"
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="article.author.account != ''">
+                #{article.author.account},
+            </if>
+            <if test="article.title != ''">
+                #{article.title},
+            </if>
+            <if test="article.content != ''">
+                #{article.content},
+            </if>
+            <if test="article.datetime != null">
+                #{article.datetime},
+            </if>
+            <if test="article.cover.id != -1">
+                #{article.cover.id},
+            </if>
+            <if test="article.tag != ''">
+                #{article.tag},
+            </if>
+            <if test="article.catalog.id != -1">
+                #{article.catalog.id}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="count" resultType="Long">
+        select count(*) from article
+    </select>
+
+    <select id="countByExample" resultType="Long">
+        select count(*) from article
+        <where>
+            <trim prefixOverrides="and">
+                <if test="article.author.account != ''">
+                    and author = #{article.author.account},
+                </if>
+                <if test="article.title != ''">
+                    and title = #{article.title},
+                </if>
+                <if test="article.datetime != null">
+                    and date_time = #{article.datetime},
+                </if>
+                <if test="article.tag != ''">
+                    and tag = #{article.tag},
+                </if>
+                <if test="article.catalog.id != -1">
+                    and "catalog" = #{article.catalog.id}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="select" parameterType="com.hercats.dev.commonbase.model.Pagination" resultMap="article">
+        select
+        id,
+        title,
+        content,
+        date_time,
+        tag,
+        user.account as user_account,
+        user.nickname as user_nickname,
+        user.brief as user_brief,
+        photo.id as cover_id,
+        photo.description as cover_description,
+        photo.latitude as cover_latitude,
+        photo.longitude as cover_longitude,
+        photo.md_five as cover_md5,
+        photo.path as cover_path,
+        photo.upload_date as cover_date,
+        article_catalog.id as catalog_id,
+        article_catalog.catalog as catalog_catalog
+        from article
+        left join user on article.author = user.account
+        left join photo on article.cover = photo.id
+        left join article_catalog on article."catalog" = article_catalog.id
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="selectByExample" resultMap="article">
+        select
+        id,
+        title,
+        content,
+        date_time,
+        tag,
+        user.account as user_account,
+        user.nickname as user_nickname,
+        user.brief as user_brief,
+        photo.id as cover_id,
+        photo.description as cover_description,
+        photo.latitude as cover_latitude,
+        photo.longitude as cover_longitude,
+        photo.md_five as cover_md5,
+        photo.path as cover_path,
+        photo.upload_date as cover_date,
+        article_catalog.id as catalog_id,
+        article_catalog.catalog as catalog_catalog
+        from article
+        left join user on article.author = user.account
+        left join photo on article.cover = photo.id
+        left join article_catalog on article."catalog" = article_catalog.id
+        <where>
+            <trim prefixOverrides="and">
+                <if test="article.author.account != ''">
+                    and author = #{article.author.account},
+                </if>
+                <if test="article.title != ''">
+                    and title = #{article.title},
+                </if>
+                <if test="article.datetime != null">
+                    and date_time = #{article.datetime},
+                </if>
+                <if test="article.tag != ''">
+                    and tag = #{article.tag},
+                </if>
+                <if test="article.catalog.id != -1">
+                    and "catalog" = #{article.catalog.id}
+                </if>
+            </trim>
+        </where>
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="article">
+        select
+        id,
+        title,
+        content,
+        date_time,
+        tag,
+        user.account as user_account,
+        user.nickname as user_nickname,
+        user.brief as user_brief,
+        photo.id as cover_id,
+        photo.description as cover_description,
+        photo.latitude as cover_latitude,
+        photo.longitude as cover_longitude,
+        photo.md_five as cover_md5,
+        photo.path as cover_path,
+        photo.upload_date as cover_date,
+        article_catalog.id as catalog_id,
+        article_catalog.catalog as catalog_catalog
+        from article
+        left join user on article.author = user.account
+        left join photo on article.cover = photo.id
+        left join article_catalog on article."catalog" = article_catalog.id
+        where article.id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.hercats.dev.commonbase.model.Article">
+        update article
+        <set>
+            <if test="article.author.account != ''">
+                author = #{article.author.account},
+            </if>
+            <if test="article.title != ''">
+                title = #{article.title},
+            </if>
+            <if test="article.content != ''">
+                content = #{article.content},
+            </if>
+            <if test="article.datetime != null">
+                date_time = #{article.datetime},
+            </if>
+            <if test="article.cover.id != -1">
+                cover = #{article.cover.id},
+            </if>
+            <if test="article.tag != ''">
+                tag = #{article.tag},
+            </if>
+            <if test="article.catalog.id != -1">
+                "catalog" = #{article.catalog.id}
+            </if>
+        </set>
+        where id = #{article.id}
+    </update>
+
+    <delete id="deleteByPrimaryKey">
+        delete from article
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByExample">
+        delete from article
+        <where>
+            <trim prefixOverrides="and">
+                <if test="article.author.account != ''">
+                    and author = #{article.author.account},
+                </if>
+                <if test="article.title != ''">
+                    and title = #{article.title},
+                </if>
+                <if test="article.datetime != null">
+                    and date_time = #{article.datetime},
+                </if>
+                <if test="article.tag != ''">
+                    and tag = #{article.tag},
+                </if>
+                <if test="article.catalog.id != -1">
+                    and "catalog" = #{article.catalog.id}
+                </if>
+            </trim>
+        </where>
+    </delete>
+
+
+</mapper>

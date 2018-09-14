@@ -21,7 +21,7 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
                     .passwordEncoder(NoOpPasswordEncoder.getInstance())
                     .withUser("blog").password("blog").roles("SERVICE_CALL")
                     .and()
-                    .withUser("test").password("test").roles("TEST")
+                    .withUser("test").password("{noop}test").roles("TEST")
         }
     }
     override fun configure(http: HttpSecurity?) {

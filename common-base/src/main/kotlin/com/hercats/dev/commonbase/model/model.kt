@@ -1,51 +1,48 @@
 package com.hercats.dev.commonbase.model
 
-import org.omg.CORBA.Object
-import java.util.*
-
 data class Album(
-        var id: Int,
-        var title: String?,
-        var description: String?,
-        var cover: Photo?,
-        var createDate: Date)
+        var id: Int = -1,
+        var title: String = "",
+        var description: String = "",
+        var cover: Photo = Photo(),
+        var createDate: SqlDate = SqlDate())
 
 data class Article(
-        var id: Int,
-        var author: User,
-        var title: String,
-        var content: String,
-        var datetime: Date,
-        var cover: Photo?,
-        var tag: String?,
-        var catalog: ArticleCatalog)
+        var id: Int = -1,
+        var author: User = User(),
+        var title: String = "",
+        var content: String = "",
+        var datetime: SqlDate = SqlDate(),
+        var cover: Photo = Photo(),
+        var tag: String = "",
+        var catalog: ArticleCatalog = ArticleCatalog())
 
 data class ArticleCatalog(
-        var id: Int,
-        var catalog: String)
+        var id: Int = -1,
+        var catalog: String = "其他")
 
 data class Card(
         var id: Int,
         var author: User,
         var content: String,
-        var background: Photo?,
+        var background: Photo = Photo(),
         var bgColor: String?,
         var textColor: String?)
 
 data class Photo(
-        var id: Int,
-        var path: String,
-        var description: String?,
-        var latitude: Double?,
-        var longitude: Double?,
-        var md5: String,
-        var uploadDate: Date?)
+        var id: Int = -1,
+        var path: String = "",
+        var description: String = "",
+        var latitude: Double = -91.0,
+        var longitude: Double = -181.0,
+        var md5: String = "",
+        var uploadDate: SqlDate = SqlDate())
 
 data class User(
         var account: String = "",
         var password: String = "",
-        var nickname: String? = "",
-        var brief: String? = "",
+        var nickname: String = "",
+        var brief: String = "",
         var status: UserStatus = UserStatus(-1, ""))
 
 

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hercats.dev.commonbase.mapper.UserMapper">
+
     <resultMap id="user" type="com.hercats.dev.commonbase.model.User">
         <id column="account" property="account"/>
+
         <result column="password" property="password"/>
         <result column="nickname" property="nickname"/>
         <result column="brief" property="brief"/>
+
         <association property="status" javaType="com.hercats.dev.commonbase.model.UserStatus">
             <id column="status_id" property="id" />
             <result column="status_description" property="description"/>
@@ -146,6 +149,7 @@
     </delete>
 
     <delete id="deleteByExample">
+        delete from user
         <where>
             <trim prefixOverrides="and">
                 <if test="user.nickname != null">
