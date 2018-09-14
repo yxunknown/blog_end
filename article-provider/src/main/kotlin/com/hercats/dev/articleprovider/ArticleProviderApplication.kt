@@ -1,11 +1,11 @@
-package com.hercats.dev.security
+package com.hercats.dev.articleprovider
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SecurityApplication
+class ArticleProviderApplication
 
 fun main(args: Array<String>) {
-    runApplication<SecurityApplication>(*args)
+    runApplication<ArticleProviderApplication>(*args)
 }
