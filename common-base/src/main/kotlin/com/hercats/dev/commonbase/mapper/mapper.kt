@@ -154,7 +154,7 @@ interface UserMapper {
     fun count(): Long
     fun countByExample(@Param("user") user: User): Long
     fun select(@Param("pagination") pagination: Pagination = Pagination()): List<User>
-    fun selectByPrimaryKey(@Param("account") account: String): User
+    fun selectByPrimaryKey(@Param("account") account: String): User?
     fun selectByExample(@Param("user") user: User,
                         @Param("pagination") pagination: Pagination = Pagination()): List<User>
 

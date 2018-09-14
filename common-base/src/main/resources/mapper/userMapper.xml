@@ -59,14 +59,14 @@
         select count(*) from user
         <where>
             <trim prefixOverrides="and">
-                <if test="user.nickname != null">
-                    and nickname=#{user.nickname}
+                <if test="user.nickname != ''">
+                    and nickname=#{user.nickname},
                 </if>
-                <if test="user.brief != null">
-                    and brief=#{user.brief}
+                <if test="user.brief != ''">
+                    and brief=#{user.brief},
                 </if>
-                <if test="user.status != null">
-                    and nickname=#{user.status.id}
+                <if test="user.status.id != -1">
+                    and status=#{user.status.id}
                 </if>
             </trim>
         </where>
@@ -94,21 +94,21 @@
         user_status.id as status_id,
         user_status.description as status_description
         from user
+        left join user_status on user.status = user_status.id
         <where>
             <trim prefixOverrides="and">
-                <if test="user.nickname != null">
-                    and nickname=#{user.nickname}
+                <if test="user.nickname != ''">
+                    and nickname=#{user.nickname},
                 </if>
-                <if test="user.brief != null">
-                    and brief=#{user.brief}
+                <if test="user.brief != ''">
+                    and brief=#{user.brief},
                 </if>
-                <if test="user.status != null">
+                <if test="user.status.id != -1">
                     and status=#{user.status.id}
                 </if>
             </trim>
         </where>
         limit #{pagination.start}, #{pagination.limit}
-        left join user_status on user.status = user_status.id
     </select>
 
     <select id="selectByPrimaryKey" resultMap="user">
@@ -127,13 +127,13 @@
     <update id="update" parameterType="com.hercats.dev.commonbase.model.User">
         update user
         <set>
-            <if test="user.nickname != null">
+            <if test="user.nickname != ''">
                 nickname = #{user.nickname},
             </if>
-            <if test="user.brief != null">
+            <if test="user.brief != ''">
                 brief = #{user.brief},
             </if>
-            <if test="user.status != null">
+            <if test="user.status.id != -1">
                 status = #{user.status.id}
             </if>
         </set>

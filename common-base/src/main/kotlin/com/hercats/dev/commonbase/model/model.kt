@@ -46,13 +46,13 @@ data class User(
         var password: String = "",
         var nickname: String? = "",
         var brief: String? = "",
-        var status: UserStatus = UserStatus(1, "正常"))
+        var status: UserStatus = UserStatus(-1, ""))
 
 
 
 data class UserStatus(
-        var id: Int = 1,
-        var description: String = "未激活")
+        var id: Int = -1,
+        var description: String = "")
 
 //default pagination parameter
 data class Pagination(

@@ -17,12 +17,17 @@ class UserController(@Autowired val userMapper: UserMapper) {
 
     @RequestMapping(value = ["/user", "/user/"], method = [RequestMethod.GET])
     fun getUser(pagination: Pagination): Message {
-        val users =  userMapper.select(pagination)
         val msg = Message()
-        msg.code = 200
-        msg.info = "查询成功"
-        msg.map("users", users)
-        msg.map("pagination", pagination)
+        try {
+            val users = userMapper.select(pagination = pagination)
+            val count = userMapper.count()
+            msg.map("users", users.map { user -> user.copy(password = "********") })
+            msg.map("pagination", pagination)
+            msg.map("count", count)
+        } catch (e: Exception) {
+            msg.code = 500
+            msg.info = e.message ?: ""
+        }
         return msg
     }
 
@@ -46,6 +51,7 @@ class UserController(@Autowired val userMapper: UserMapper) {
         if (validate(user, msg)) {
             msg.code = 200
             user.password = sha(user.password)
+            user.status = UserStatus(id = 1, description = "未激活")
             //set user status to be default
             user.status = UserStatus()
             try {
@@ -74,10 +80,15 @@ class UserController(@Autowired val userMapper: UserMapper) {
         } else {
             try {
                 if (userMapper.update(user) == 1) {
-                    msg.code = 200
-                    msg.info = "更新用户信息成功"
-                    msg.map("user", userMapper.selectByPrimaryKey(
-                            user.account).apply { password = "********" })
+                    val newUser = userMapper.selectByPrimaryKey(user.account)
+                    if (newUser is User) {
+                        msg.code = 200
+                        msg.info = "更新用户信息成功"
+                        msg.map("user", newUser.apply { password = "********" })
+                    } else {
+                        msg.code = 500
+                        msg.info = "更新用户信息失败"
+                    }
                 } else {
                     msg.code = 500
                     msg.info = "更新用户信息失败"
@@ -86,6 +97,36 @@ class UserController(@Autowired val userMapper: UserMapper) {
                 msg.code = 500
                 msg.info = e.message ?: ""
             }
+        }
+        return msg
+    }
+
+    @RequestMapping(value = ["/user/count", "/user/count/"], method = [RequestMethod.GET])
+    fun countUser(): Message {
+        val msg = Message()
+        try {
+            val count = userMapper.count()
+            msg.info = "查询成功"
+            msg.map("selection", "")
+            msg.map("count", count)
+        } catch (e: Exception) {
+            msg.code = 500
+            msg.info = e.message ?: ""
+        }
+        return msg
+    }
+
+    @RequestMapping(value = ["/user/counts", "/user/counts/"], method = [RequestMethod.GET, RequestMethod.POST])
+    fun countUserByExample(user: User): Message {
+        val msg = Message()
+        try {
+            val count = userMapper.countByExample(user)
+            msg.info = "查询成功"
+            msg.map("selection", user)
+            msg.map("count", count)
+        } catch (e: Exception) {
+            msg.code = 500
+            msg.info = e.message ?: ""
         }
         return msg
     }
@@ -100,16 +141,33 @@ class UserController(@Autowired val userMapper: UserMapper) {
             try {
                 val user = userMapper.selectByPrimaryKey(account)
                 msg.code = 200
-                if (validateAccount(user.account)) {
-                    msg.info = "用户不存在"
-                } else {
+                if (user is User) {
                     msg.info = "查找成功"
                     msg.map("user", user.apply { password = "********" })
+                } else {
+                    msg.info = "用户不存在"
                 }
             } catch (e: Exception) {
                 msg.code = 500
                 msg.info = e.message ?: "未知错误"
             }
+        }
+        return msg
+    }
+
+    @RequestMapping(value = ["/users", "/users/"], method = [RequestMethod.GET, RequestMethod.POST])
+    fun getUserByExample(user: User, pagination: Pagination): Message {
+        val msg = Message()
+        try {
+            val users = userMapper.selectByExample(user = user, pagination = pagination)
+            val count = userMapper.countByExample(user)
+            msg.map("users", users.map { user -> user.copy(password = "********") })
+            msg.map("selection", user)
+            msg.map("pagination", pagination)
+            msg.map("count", count)
+        } catch (e: Exception) {
+            msg.code = 500
+            msg.info = e.message ?: ""
         }
         return msg
     }
