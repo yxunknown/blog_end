@@ -5,3 +5,4 @@
 */*.cmd
 */.mvn
 .DS_Store
+*/.gitignore
