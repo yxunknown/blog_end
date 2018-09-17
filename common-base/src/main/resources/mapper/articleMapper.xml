@@ -35,6 +35,9 @@
     <insert id="insert" parameterType="com.hercats.dev.commonbase.model.Article">
         insert into article
         <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="article.id != -1">
+                id,
+            </if>
             <if test="article.author.account != ''">
                 author,
             </if>
@@ -54,11 +57,14 @@
                 tag,
             </if>
             <if test="article.catalog.id != -1">
-                "catalog"
+                catalog
             </if>
         </trim>
         values
         <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="article.id != -1">
+                #{article.id},
+            </if>
             <if test="article.author.account != ''">
                 #{article.author.account},
             </if>
@@ -92,19 +98,19 @@
         <where>
             <trim prefixOverrides="and">
                 <if test="article.author.account != ''">
-                    and author = #{article.author.account},
+                    and author = #{article.author.account}
                 </if>
                 <if test="article.title != ''">
-                    and title = #{article.title},
+                    and title = #{article.title}
                 </if>
-                <if test="article.datetime != null">
-                    and date_time = #{article.datetime},
+                <if test="article.datetime != ''">
+                    and date_time >= #{article.datetime}
                 </if>
                 <if test="article.tag != ''">
-                    and tag = #{article.tag},
+                    and tag = #{article.tag}
                 </if>
                 <if test="article.catalog.id != -1">
-                    and "catalog" = #{article.catalog.id}
+                    and article.catalog = #{article.catalog.id}
                 </if>
             </trim>
         </where>
@@ -112,11 +118,11 @@
 
     <select id="select" parameterType="com.hercats.dev.commonbase.model.Pagination" resultMap="article">
         select
-        id,
-        title,
-        content,
-        date_time,
-        tag,
+        article.id,
+        article.title,
+        article.content,
+        article.date_time,
+        article.tag,
         user.account as user_account,
         user.nickname as user_nickname,
         user.brief as user_brief,
@@ -132,17 +138,17 @@
         from article
         left join user on article.author = user.account
         left join photo on article.cover = photo.id
-        left join article_catalog on article."catalog" = article_catalog.id
+        left join article_catalog on article.catalog = article_catalog.id
         limit #{pagination.start}, #{pagination.limit}
     </select>
 
     <select id="selectByExample" resultMap="article">
         select
-        id,
-        title,
-        content,
-        date_time,
-        tag,
+        article.id,
+        article.title,
+        article.content,
+        article.date_time,
+        article.tag,
         user.account as user_account,
         user.nickname as user_nickname,
         user.brief as user_brief,
@@ -158,23 +164,23 @@
         from article
         left join user on article.author = user.account
         left join photo on article.cover = photo.id
-        left join article_catalog on article."catalog" = article_catalog.id
+        left join article_catalog on article.catalog = article_catalog.id
         <where>
             <trim prefixOverrides="and">
                 <if test="article.author.account != ''">
-                    and author = #{article.author.account},
+                    and author = #{article.author.account}
                 </if>
                 <if test="article.title != ''">
-                    and title = #{article.title},
+                    and title = #{article.title}
                 </if>
-                <if test="article.datetime != null">
-                    and date_time = #{article.datetime},
+                <if test="article.datetime != ''">
+                    and date_time >= #{article.datetime}
                 </if>
                 <if test="article.tag != ''">
                     and tag = #{article.tag},
                 </if>
                 <if test="article.catalog.id != -1">
-                    and "catalog" = #{article.catalog.id}
+                    and article.catalog = #{article.catalog.id}
                 </if>
             </trim>
         </where>
@@ -183,11 +189,11 @@
 
     <select id="selectByPrimaryKey" resultMap="article">
         select
-        id,
-        title,
-        content,
-        date_time,
-        tag,
+        article.id,
+        article.title,
+        article.content,
+        article.date_time,
+        article.tag,
         user.account as user_account,
         user.nickname as user_nickname,
         user.brief as user_brief,
@@ -203,7 +209,7 @@
         from article
         left join user on article.author = user.account
         left join photo on article.cover = photo.id
-        left join article_catalog on article."catalog" = article_catalog.id
+        left join article_catalog on article.catalog = article_catalog.id
         where article.id = #{id}
     </select>
 
@@ -219,7 +225,7 @@
             <if test="article.content != ''">
                 content = #{article.content},
             </if>
-            <if test="article.datetime != null">
+            <if test="article.datetime != ''">
                 date_time = #{article.datetime},
             </if>
             <if test="article.cover.id != -1">
@@ -237,7 +243,7 @@
 
     <delete id="deleteByPrimaryKey">
         delete from article
-        where id = #{id}
+        where article.id = #{id}
     </delete>
 
     <delete id="deleteByExample">

@@ -1,4 +1,4 @@
-package com.hercats.dev.articleprovider.config
+package com.hercats.dev.security
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.HandlerInterceptor
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse
 class RequestInterceptor: HandlerInterceptor {
     val logger = Logger.getLogger(this::class.simpleName)
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        logger.log(Level.INFO, request.authType)
+        logger.log(Level.INFO, """from ${request.remoteHost}:${request.remotePort} to ${request.requestURL} ${request.method}""")
         return true
     }
 

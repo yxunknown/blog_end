@@ -5,14 +5,14 @@ data class Album(
         var title: String = "",
         var description: String = "",
         var cover: Photo = Photo(),
-        var createDate: SqlDate = SqlDate())
+        var createDate: String = "")
 
 data class Article(
         var id: Int = -1,
         var author: User = User(),
         var title: String = "",
         var content: String = "",
-        var datetime: SqlDate = SqlDate(),
+        var datetime: String = "",
         var cover: Photo = Photo(),
         var tag: String = "",
         var catalog: ArticleCatalog = ArticleCatalog())
@@ -36,7 +36,7 @@ data class Photo(
         var latitude: Double = -91.0,
         var longitude: Double = -181.0,
         var md5: String = "",
-        var uploadDate: SqlDate = SqlDate())
+        var uploadDate: String = "")
 
 data class User(
         var account: String = "",

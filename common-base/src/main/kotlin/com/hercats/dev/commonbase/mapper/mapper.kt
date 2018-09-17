@@ -104,7 +104,7 @@ interface ArticleMapper {
 
     fun select(@Param("pagination") pagination: Pagination = Pagination()): List<Article>
 
-    fun selectByPrimaryKey(@Param("id") id: Int): Article
+    fun selectByPrimaryKey(@Param("id") id: Int): Article?
 
     fun selectByExample(@Param("article") article: Article,
                         @Param("pagination") pagination: Pagination = Pagination()): List<Article>

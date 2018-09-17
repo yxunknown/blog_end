@@ -63,10 +63,10 @@
         <where>
             <trim prefixOverrides="and">
                 <if test="user.nickname != ''">
-                    and nickname=#{user.nickname},
+                    and nickname=#{user.nickname}
                 </if>
                 <if test="user.brief != ''">
-                    and brief=#{user.brief},
+                    and brief=#{user.brief}
                 </if>
                 <if test="user.status.id != -1">
                     and status=#{user.status.id}
@@ -101,10 +101,10 @@
         <where>
             <trim prefixOverrides="and">
                 <if test="user.nickname != ''">
-                    and nickname=#{user.nickname},
+                    and nickname=#{user.nickname}
                 </if>
                 <if test="user.brief != ''">
-                    and brief=#{user.brief},
+                    and brief=#{user.brief}
                 </if>
                 <if test="user.status.id != -1">
                     and status=#{user.status.id}

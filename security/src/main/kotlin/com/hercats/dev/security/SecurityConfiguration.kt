@@ -19,9 +19,9 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
         if (auth is AuthenticationManagerBuilder) {
             auth.inMemoryAuthentication()
                     .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                    .withUser("blog").password("blog").roles("SERVICE_CALL")
+                    .withUser("test").password("test").roles("TEST")
                     .and()
-                    .withUser("test").password("{noop}test").roles("TEST")
+                    .withUser("admin").password("admin").roles("ADMIN")
         }
     }
     override fun configure(http: HttpSecurity?) {
