@@ -235,7 +235,7 @@
                 tag = #{article.tag},
             </if>
             <if test="article.catalog.id != -1">
-                "catalog" = #{article.catalog.id}
+                catalog = #{article.catalog.id}
             </if>
         </set>
         where id = #{article.id}

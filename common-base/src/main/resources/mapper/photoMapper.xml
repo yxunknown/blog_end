@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hercats.dev.commonbase.mapper.PhotoMapper">
+    <resultMap id="photo" type="com.hercats.dev.commonbase.model.Photo">
+        <id column="id" property="id"/>
+        <result column="path" property="path"/>
+        <result column="description" property="description"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
+        <result column="md_five" property="md5"/>
+        <result column="upload_date" property="uploadDate"/>
+    </resultMap>
+
+    <insert id="insert" keyProperty="photo.id" useGeneratedKeys="true" parameterType="com.hercats.dev.commonbase.model.Photo">
+        insert into photo
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="photo.path != ''">
+                path,
+            </if>
+            <if test="photo.description != ''">
+                description,
+            </if>
+            <if test="photo.latitude != -91">
+                latitude,
+            </if>
+            <if test="photo.longitude != -181">
+                longitude,
+            </if>
+            <if test="photo.md5 != ''">
+                md_five,
+            </if>
+            <if test="photo.uploadDate != ''">
+                upload_date
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="photo.path != ''">
+               #{photo.path},
+            </if>
+            <if test="photo.description != ''">
+                #{photo.description},
+            </if>
+            <if test="photo.latitude != -91">
+                #{photo.latitude},
+            </if>
+            <if test="photo.longitude != -181">
+                #{photo.longitude},
+            </if>
+            <if test="photo.md5 != ''">
+                #{photo.md5},
+            </if>
+            <if test="photo.uploadDate != ''">
+                #{photo.uploadDate}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="count" resultType="Long">
+        select count(*) from photo
+    </select>
+    <select id="countByExample" parameterType="com.hercats.dev.commonbase.model.Photo">
+        <bind name="desc_pattern" value="'%' + photo.description + '%'" />
+        select COUNT(*) from photo
+        <where>
+            <trim prefixOverrides="and">
+                <if test="photo.description != ''">
+                    and description like #{desc_pattern}
+                </if>
+                <if test="photo.md5 != ''">
+                    and md_five = #{photo.md5}
+                </if>
+                <if test="photo.uploadDate != ''">
+                    and upload_date >= #{photo.uploadDate}
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="photo">
+        select * from photo
+        where id = #{id}
+    </select>
+
+    <select id="select" parameterType="com.hercats.dev.commonbase.model.Pagination" resultMap="photo">
+        select * from photo
+        limit #{pagination.start}, {pagination.start}
+    </select>
+    <select id="selectByExample" resultMap="photo">
+        select * from photo
+        <where>
+            <trim prefixOverrides="and">
+                <if test="photo.description != ''">
+                    and description like #{desc_pattern}
+                </if>
+                <if test="photo.md5 != ''">
+                    and md_five = #{photo.md5}
+                </if>
+                <if test="photo.uploadDate != ''">
+                    and upload_date >= #{photo.uploadDate}
+                </if>
+            </trim>
+        </where>
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+    <update id="update" parameterType="com.hercats.dev.commonbase.model.Photo">
+        update photo
+        <set>
+            <if test="photo.description != ''">
+                description = #{photo.description},
+            </if>
+            <if test="photo.latitude != -91">
+                latitude = #{photo.latitude},
+            </if>
+            <if test="photo.longitude != -181">
+                longitude = #{photo.longitude}
+            </if>
+        </set>
+        where id = #{photo.id}
+    </update>
+    <delete id="deleteByPrimaryKey">
+        delete from photo
+        where photo.id = #{id}
+    </delete>
+</mapper>

@@ -139,7 +139,7 @@ interface PhotoMapper {
     fun count(): Long
     fun countByExample(@Param("photo") photo: Photo): Long
     fun select(@Param("pagination") pagination: Pagination = Pagination()): List<Photo>
-    fun selectByPrimaryKey(@Param("id") id: Int): Photo
+    fun selectByPrimaryKey(@Param("id") id: Int): Photo?
     fun selectByExample(@Param("photo") photo: Photo,
                         @Param("pagination") pagination: Pagination = Pagination()): List<Photo>
 
