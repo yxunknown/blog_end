@@ -146,6 +146,14 @@ interface PhotoMapper {
     fun update(@Param("photo") photo: Photo): Int
     fun deleteByPrimaryKey(@Param("id") id: Int): Long
     fun deleteByExample(@Param("photo") photo: Photo): Long
+
+    fun addPhotoIntoAlbum(@Param("albumId") albumId: Int,
+                          @Param("photoId") photoId: Int): Int
+
+    fun getAlbumPhotos(@Param("pagination") pagination: Pagination,
+                       @Param("albumId") albumId: Int): List<Photo>
+
+    fun countAlbumPhotos(@Param("albumId") albumId: Int): Long
 }
 
 @Mapper

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hercats.dev.commonbase.mapper.AlbumMapper">
+    <resultMap id="album" type="com.hercats.dev.commonbase.model.Album">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="create_date" property="createDate"/>
+        <association property="cover" javaType="com.hercats.dev.commonbase.model.Photo">
+            <id column="cover_id" property="id"/>
+            <result column="cover_path" property="path"/>
+            <result column="cover_description" property="description"/>
+            <result column="cover_latitude" property="latitude"/>
+            <result column="cover_longitude" property="longitude"/>
+            <result column="cover_md5" property="md5"/>
+            <result column="cover_upload_date" property="uploadDate"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="album.id"
+            parameterType="com.hercats.dev.commonbase.model.Album">
+        insert into album
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="album.title != null">
+                title,
+            </if>
+            <if test="album.description != null">
+                description,
+            </if>
+            <if test="album.createDate != null">
+                create_date
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="album.title != null">
+                #{album.title},
+            </if>
+            <if test="album.description != null">
+                #{album.description},
+            </if>
+            <if test="album.createDate != null">
+                #{album.createDate}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="count" resultType="Long">
+        select count(*) from album
+    </select>
+
+    <select id="select" resultMap="album">
+        select
+        album.id,
+        album.title,
+        album.description,
+        album.create_date,
+        photo.id as cover_id,
+        photo.path as cover_path,
+        photo.description as cover_description,
+        photo.latitude as cover_latitude,
+        photo.longitude as cover_longitude,
+        photo.md_five as cover_md5,
+        photo.upload_date as cover_upload_date
+        from album
+        left join photo on album.cover = photo.id
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <update id="update" parameterType="com.hercats.dev.commonbase.model.Album">
+        update album
+        <set>
+            <if test="album.title != ''">
+                title = #{album.title},
+            </if>
+            <if test="album.description != ''">
+                description = #{album.description},
+            </if>
+            <if test="album.cover.id != -1">
+                cover = #{album.cover.id}
+            </if>
+        </set>
+        where id = #{album.id}
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="album">
+         select
+        album.id,
+        album.title,
+        album.description,
+        album.create_date,
+        photo.id as cover_id,
+        photo.path as cover_path,
+        photo.description as cover_description,
+        photo.latitude as cover_latitude,
+        photo.longitude as cover_longitude,
+        photo.md_five as cover_md5,
+        photo.upload_date as cover_upload_date
+        from album
+        left join photo on album.cover = photo.id
+        where album.id = #{id}
+    </select>
+
+
+</mapper>

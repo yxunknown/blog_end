@@ -1,5 +1,6 @@
 package com.hercats.com.photoprovider.controller
 
+import com.hercats.dev.commonbase.mapper.AlbumMapper
 import com.hercats.dev.commonbase.mapper.PhotoMapper
 import com.hercats.dev.commonbase.model.Message
 import com.hercats.dev.commonbase.model.Pagination
@@ -22,7 +23,8 @@ import java.io.FileOutputStream
 import java.util.*
 
 @RestController
-class PhotoController(@Autowired val photoMapper: PhotoMapper) {
+class PhotoController(@Autowired val photoMapper: PhotoMapper,
+                      @Autowired val albumMapper: AlbumMapper) {
 
     val path = "/Users/hercat/Documents/photo_test"
 
@@ -51,8 +53,7 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper) {
                         photo.path = storage
                         if (photoMapper.insert(photo) == 1) {
                             msg.info = "上传成功"
-                            msg.map("photo", photoMapper.
-                                    selectByPrimaryKey(photo.id)
+                            msg.map("photo", photoMapper.selectByPrimaryKey(photo.id)
                                     ?.apply { path = "/photo/download/$id" } ?: "")
                         } else {
                             msg.code = 500
@@ -88,7 +89,8 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper) {
                 if (photoMapper.update(photo) == 1) {
                     msg.code = 200
                     msg.info = "更新照片成功"
-                    msg.map("photo", photoMapper.selectByPrimaryKey(photo.id)?.apply { path = "/photo/download/$id" } ?: "")
+                    msg.map("photo", photoMapper.selectByPrimaryKey(photo.id)?.apply { path = "/photo/download/$id" }
+                            ?: "")
                 } else {
                     msg.code = 500
                     msg.info = "更新失败"
@@ -100,7 +102,6 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper) {
         }
         return msg
     }
-
 
 
     @RequestMapping(value = ["/photo/download/{id}", "/photo/download/{id}"], method = [RequestMethod.GET])
@@ -124,6 +125,65 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper) {
                     .contentType(MediaType.parseMediaType("application/octet-stream"))
                     .body(FileSystemResource(file))
         }
+    }
+
+    @RequestMapping(value = ["/photo/{photoId}/{albumId}", "/photo/{photoId}/{albumId}/"], method = [RequestMethod.POST])
+    fun addPhotoToAlbum(@PathVariable("photoId") photoId: Int,
+                        @PathVariable("albumId") albumId: Int): Message {
+        val msg = Message()
+        when {
+            (photoMapper.selectByPrimaryKey(photoId) == null) -> {
+                msg.code = 400
+                msg.info = "照片不存在"
+            }
+            (albumMapper.selectByPrimaryKey(albumId) == null) -> {
+                msg.code = 400
+                msg.info = "相册不存在"
+            }
+            else -> {
+                try {
+                    if (photoMapper.addPhotoIntoAlbum(albumId, photoId) == 1) {
+                        msg.code = 200
+                        msg.info = "添加照片成功"
+                    } else {
+                        msg.code = 500
+                        msg.info = "添加照片失败"
+                    }
+                } catch (e: Exception) {
+                    msg.code = 500
+                    msg.info = e.message ?: "未知错误"
+                }
+            }
+        }
+        return msg
+    }
+
+    @RequestMapping(value = ["/photo/album/{albumId}", "/photo/album/{albumId}"], method = [RequestMethod.GET])
+    fun getAlbumPhotos(@PathVariable("albumId") albumId: Int,
+                       pagination: Pagination): Message {
+        val msg = Message()
+        try {
+            val album = albumMapper.selectByPrimaryKey(albumId)
+            if (album == null) {
+                msg.code = 400
+                msg.info = "相册不存在"
+            } else {
+                val photos = photoMapper.getAlbumPhotos(pagination, albumId)
+                msg.code = 200
+                msg.info = "查询成功"
+                photos.apply {
+                    this.forEach { photo -> photo.path = "http://127.0.0.1:8083/photo/download/${photo.id}" }
+                }
+                msg.map("album", album)
+                msg.map("count", photoMapper.countAlbumPhotos(albumId))
+                msg.map("pagination", pagination)
+                msg.map("photos", photos)
+            }
+        } catch (e: Exception) {
+            msg.code = 500
+            msg.info = e.message ?: "未知错误"
+        }
+        return msg
     }
 
     fun saveToFile(file: MultipartFile): String {

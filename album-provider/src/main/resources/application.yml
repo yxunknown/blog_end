@@ -1,0 +1,10 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: album-provider
+  profiles:
+    include:
+      - eureka
+      - mybatis
+      - datasource

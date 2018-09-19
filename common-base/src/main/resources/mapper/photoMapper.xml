@@ -59,6 +59,7 @@
     <select id="count" resultType="Long">
         select count(*) from photo
     </select>
+
     <select id="countByExample" parameterType="com.hercats.dev.commonbase.model.Photo">
         <bind name="desc_pattern" value="'%' + photo.description + '%'" />
         select COUNT(*) from photo
@@ -86,6 +87,7 @@
         select * from photo
         limit #{pagination.start}, {pagination.start}
     </select>
+
     <select id="selectByExample" resultMap="photo">
         select * from photo
         <where>
@@ -103,6 +105,7 @@
         </where>
         limit #{pagination.start}, #{pagination.limit}
     </select>
+
     <update id="update" parameterType="com.hercats.dev.commonbase.model.Photo">
         update photo
         <set>
@@ -118,8 +121,36 @@
         </set>
         where id = #{photo.id}
     </update>
+
     <delete id="deleteByPrimaryKey">
         delete from photo
         where photo.id = #{id}
     </delete>
+
+    <insert id="addPhotoIntoAlbum">
+        insert into album_photo
+        (album_id, photo_id)
+        values
+        (#{albumId}, #{photoId})
+    </insert>
+    <select id="getAlbumPhotos" resultMap="photo">
+        select
+        photo.id as id,
+        photo.path as path,
+        photo.description as description,
+        photo.latitude as latitude,
+        photo.longitude as longitude,
+        photo.md_five as md_five,
+        photo.upload_date as upload_date
+        from album_photo
+        left join photo on album_photo.photo_id = photo.id
+        where album_photo.album_id = #{albumId}
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <select id="countAlbumPhotos" resultType="Long">
+        select count(*)
+        from album_photo
+        where album_id = #{albumId}
+    </select>
 </mapper>

@@ -1,0 +1,10 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: login-serivce
+  profiles:
+    include:
+      - datasource
+      - eureka
+      - mybatis
