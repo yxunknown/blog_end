@@ -8,3 +8,4 @@ spring:
       - datasource
       - eureka
       - mybatis
+      - redis

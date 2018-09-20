@@ -10,3 +10,7 @@ fun sha(source: String): String {
     val sha = BigInteger(msgDigest.digest(inputData)).abs()
     return sha.toString(32)
 }
+
+fun main(args: Array<String>) {
+    println(sha("Loveyx.123"))
+}

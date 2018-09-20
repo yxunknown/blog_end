@@ -56,6 +56,13 @@ data class Pagination(
         val start: Long = 0,
         val limit: Long = 20)
 
+data class Token(
+        val username: String,
+        val token: String,
+        val tokenExpire: Long = 60 * 60 * 24,
+        val refreshToken: String,
+        val refreshTokenExpire: Long = tokenExpire * 7)
+
 class Message{
     var code: Int = 200
     var info: String = ""

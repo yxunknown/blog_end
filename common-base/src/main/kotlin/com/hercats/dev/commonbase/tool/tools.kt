@@ -16,3 +16,6 @@ fun md5(bytes: ByteArray): String {
         ""
     }
 }
+
+//username with random number to generate token by md5 method
+fun token(username: String) = md5("$username${getId()}".toByteArray())

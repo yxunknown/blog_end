@@ -161,7 +161,7 @@ class UserController(@Autowired val userMapper: UserMapper) {
         try {
             val users = userMapper.selectByExample(user = user, pagination = pagination)
             val count = userMapper.countByExample(user)
-            msg.map("users", users.map { user -> user.copy(password = "********") })
+            msg.map("users", users.map { it -> it.copy(password = "********") })
             msg.map("selection", user)
             msg.map("pagination", pagination)
             msg.map("count", count)
