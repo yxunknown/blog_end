@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import javax.jws.soap.SOAPBinding
 
 @RestController
 class LoginController(@Autowired val userMapper: UserMapper,
@@ -24,7 +23,7 @@ class LoginController(@Autowired val userMapper: UserMapper,
         return msg
     }
 
-    @RequestMapping(value = ["/auth/login", "/auth/login/"], method = [RequestMethod.POST])
+    @RequestMapping(value = ["login/token", "login/token/"], method = [RequestMethod.POST])
     fun login(user: User): Message {
         val msg = Message()
         when {
@@ -69,7 +68,7 @@ class LoginController(@Autowired val userMapper: UserMapper,
         return msg
     }
 
-    @RequestMapping(value = ["/auth/refresh", "/auth/refresh/"], method = [RequestMethod.POST])
+    @RequestMapping(value = ["/login/refresh", "/login/refresh/"], method = [RequestMethod.POST])
     fun refreshToken(refreshToken: String): Message {
         val msg = Message()
         val account = redis get refreshToken
@@ -89,10 +88,10 @@ class LoginController(@Autowired val userMapper: UserMapper,
             else -> {
                 val user = userMapper.selectByPrimaryKey(account)?.apply { password = "********" }
                 val token = token(username = account)
-                val refreshToken = token(username = account)
+                val newRefreshToken = token(username = account)
                 val tokenInfo = Token(username = account,
                         token = token,
-                        refreshToken = refreshToken)
+                        refreshToken = newRefreshToken)
                 if (setToken(tokenInfo)) {
                     msg ok "刷新token成功"
                     msg.map("token", tokenInfo)
@@ -105,8 +104,39 @@ class LoginController(@Autowired val userMapper: UserMapper,
         return msg
     }
 
-    fun setToken(token: Token): Boolean =
-            redis.set(key = token.token, value = token.username, expire = token.tokenExpire) &&
-            redis.set(key = token.refreshToken, value = token.username, expire = token.refreshTokenExpire)
+    @RequestMapping(value = ["/login/out", "/login/out"], method = [RequestMethod.POST])
+    fun logout(token: String): Message {
+        val msg = Message()
+        val account = redis get token
+        val refreshToken = redis get "$account.refresh_token"
+        when {
+            (token be blank) -> {
+                msg error_401 "未授权"
+            }
+            (account be blank) -> {
+                msg error_400 "查找用户信息失败"
+            }
+            (redis del token &&
+                    redis del refreshToken &&
+                    redis del "$account.token" &&
+                    redis del "$account.refresh_token") -> {
+                msg ok "退出登录成功"
+            }
+            else -> {
+                msg error_500 "退出登录失败"
+            }
+        }
+        return msg
+    }
+
+    fun setToken(token: Token): Boolean {
+        redis del (redis get "${token.username}.token")
+        redis del (redis get "${token.username}.refresh_token")
+        return redis.set(key = token.token, value = token.username, expire = token.tokenExpire) &&
+                redis.set(key = token.refreshToken, value = token.username, expire = token.refreshTokenExpire) &&
+                redis.set(key = "${token.username}.token", value = token.token, expire = token.tokenExpire) &&
+                redis.set(key = "${token.username}.refresh_token", value = token.refreshToken, expire = token.refreshTokenExpire)
+    }
+
 
 }

@@ -20,3 +20,8 @@ infix fun Message.ok(_info: String) {
     code = 200
     info = _info
 }
+
+infix fun Message.error_401(_info: String) {
+    code = 401
+    info = _info
+}

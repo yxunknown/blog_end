@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hercats.dev.commonbase.mapper.CardMapper">
+
+    <resultMap id="card" type="com.hercats.dev.commonbase.model.Card">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="bg_color" property="bgColor"/>
+        <result column="text_color" property="textColor"/>
+        <association property="author" javaType="com.hercats.dev.commonbase.model.User">
+            <id column="user_account" property="account"/>
+            <result column="user_brief" property="brief"/>
+            <result column="user_nickname" property="nickname"/>
+        </association>
+        <association property="background" javaType="com.hercats.dev.commonbase.model.Photo">
+            <id column="bg_id" property="id"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert"
+            useGeneratedKeys="true"
+            keyProperty="card.id"
+            parameterType="com.hercats.dev.commonbase.model.Card">
+        insert into card
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="card.author.account != ''">
+                author,
+            </if>
+            <if test="card.content != ''">
+                content,
+            </if>
+            <if test="card.background.id != -1">
+                background,
+            </if>
+            <if test="card.bgColor != ''">
+                bg_color,
+            </if>
+            <if test="card.textColor != ''">
+                text_color
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="card.author.account != ''">
+                #{card.author.account},
+            </if>
+            <if test="card.content != ''">
+                #{card.content},
+            </if>
+            <if test="card.background.id != -1">
+                #{card.background.id},
+            </if>
+            <if test="card.bgColor != ''">
+                #{card.bgColr},
+            </if>
+            <if test="card.textColor != ''">
+                #{card.textColor}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="count" resultType="Long">
+        select count(*) from card
+    </select>
+
+    <select id="select" resultMap="card">
+        select
+        card.id,
+        card.content,
+        card.bg_colr,
+        card.text_color,
+        user.account as user_account,
+        user.brief as user_brief,
+        user.nickname as user_nickname,
+        photo.id as bg_id
+        from card
+        left join user on card.author = user.account
+        left join photo on card.background = photo.id
+        limit #{pagination.start}, #{pagination.limit}
+    </select>
+
+    <update id="update" parameterType="com.hercats.dev.commonbase.model.Card">
+        update card
+        <set>
+            <if test="card.content != ''">
+                content = #{card.content},
+            </if>
+            <if test="card.background.id != -1">
+                background = #{card.background.id},
+            </if>
+            <if test="card.bgColor != ''">
+                bg_color = #{card.bgColor},
+            </if>
+            <if test="card.textColo != ''">
+                text_color = #{card.textColor}
+            </if>
+        </set>
+        where card.id = #{card.id}
+    </update>
+    <delete id="deleteByPrimaryKey">
+        delete from card
+        where card.id = #{id}
+    </delete>
+</mapper>

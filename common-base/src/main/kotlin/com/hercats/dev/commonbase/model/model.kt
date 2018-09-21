@@ -22,12 +22,12 @@ data class ArticleCatalog(
         var catalog: String = "其他")
 
 data class Card(
-        var id: Int,
-        var author: User,
-        var content: String,
+        var id: Int = -1,
+        var author: User = User(),
+        var content: String = "",
         var background: Photo = Photo(),
-        var bgColor: String?,
-        var textColor: String?)
+        var bgColor: String = "#de1c31",
+        var textColor: String = "#ffffff")
 
 data class Photo(
         var id: Int = -1,

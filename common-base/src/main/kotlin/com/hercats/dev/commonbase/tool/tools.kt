@@ -2,6 +2,7 @@ package com.hercats.dev.commonbase.tool
 
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.sql.Time
 import kotlin.math.absoluteValue
 
 fun getId(): Long = SnowFlakeWorker(1, 2).nextId().absoluteValue
@@ -18,4 +19,4 @@ fun md5(bytes: ByteArray): String {
 }
 
 //username with random number to generate token by md5 method
-fun token(username: String) = md5("$username${getId()}".toByteArray())
+fun token(username: String) = md5("$username${System.nanoTime()}".toByteArray())

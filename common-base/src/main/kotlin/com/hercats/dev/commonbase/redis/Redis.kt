@@ -9,13 +9,10 @@ import java.util.concurrent.TimeUnit
 class Redis(@Autowired val redisTemplate: RedisTemplate<String, String>) {
 
     /**
-     * add or update a key with value and expire
+     * add or update a [key] with [value] and [expire]
      */
-    fun set(key: String, value: String, expire: Long? = null): Boolean = try {
-        redisTemplate.opsForValue().set(key, value)
-        if (expire is Long) {
-            redisTemplate.expire(key, expire, TimeUnit.SECONDS)
-        }
+    fun set(key: String, value: String, expire: Long = 60 * 60 * 6): Boolean = try {
+        redisTemplate.opsForValue().set(key, value, expire, TimeUnit.SECONDS)
         true
     } catch (e: Exception) {
         e.printStackTrace()
