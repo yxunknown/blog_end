@@ -123,7 +123,7 @@ interface CardMapper {
     fun countByExample(@Param("card") card: Card): Long
     fun select(@Param("pagination") pagination: Pagination = Pagination()): List<Card>
 
-    fun selectByPrimaryKey(@Param("id") id: Int): Card
+    fun selectByPrimaryKey(@Param("id") id: Int): Card?
 
     fun selectByExample(@Param("card") card: Card,
                         @Param("pagination") pagination: Pagination = Pagination()): List<Card>

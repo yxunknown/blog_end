@@ -51,7 +51,7 @@
                 #{card.background.id},
             </if>
             <if test="card.bgColor != ''">
-                #{card.bgColr},
+                #{card.bgColor},
             </if>
             <if test="card.textColor != ''">
                 #{card.textColor}
@@ -67,7 +67,7 @@
         select
         card.id,
         card.content,
-        card.bg_colr,
+        card.bg_color,
         card.text_color,
         user.account as user_account,
         user.brief as user_brief,
@@ -79,6 +79,22 @@
         limit #{pagination.start}, #{pagination.limit}
     </select>
 
+    <select id="selectByPrimaryKey" resultMap="card">
+        select
+        card.id,
+        card.content,
+        card.bg_color,
+        card.text_color,
+        user.account as user_account,
+        user.brief as user_brief,
+        user.nickname as user_nickname,
+        photo.id as bg_id
+        from card
+        left join user on card.author = user.account
+        left join photo on card.background = photo.id
+        where card.id = #{id}
+    </select>
+
     <update id="update" parameterType="com.hercats.dev.commonbase.model.Card">
         update card
         <set>
@@ -88,10 +104,10 @@
             <if test="card.background.id != -1">
                 background = #{card.background.id},
             </if>
-            <if test="card.bgColor != ''">
+            <if test="card.bgColor != '#de1c31'">
                 bg_color = #{card.bgColor},
             </if>
-            <if test="card.textColo != ''">
+            <if test="card.textColor != '#ffffff'">
                 text_color = #{card.textColor}
             </if>
         </set>

@@ -8,3 +8,8 @@ spring:
       - datasource
       - mybatis
       - eureka
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: admin

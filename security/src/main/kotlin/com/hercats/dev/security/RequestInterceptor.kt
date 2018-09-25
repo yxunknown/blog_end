@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse
 class RequestInterceptor: HandlerInterceptor {
     val logger = Logger.getLogger(this::class.simpleName)
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        logger.log(Level.INFO, """from ${request.remoteHost}:${request.remotePort} to ${request.requestURL} ${request.method}""")
+        logger.log(Level.INFO, """from ${request.authType} to ${request.requestURL} ${request.method}""")
         return true
     }
 
