@@ -45,7 +45,7 @@ class Redis(@Autowired val redisTemplate: RedisTemplate<String, String>) {
     /**
      * check if the redis contains the key
      */
-    fun exists(key: String): Boolean = try {
+    infix fun exists(key: String): Boolean = try {
         redisTemplate.hasKey(key)
     } catch (e: Exception) {
         e.printStackTrace()

@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    include:
+      - eureka
+      - redis
+      - datasource
+server:
+  port: 8089
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8301/eureka/
+
+zuul:
+  routes:
+    login-service:
+      path: /login-service/**
+      serviceId: LOGIN-SERIVCE
+    card-provider:
+      path: /card-service/**
+      serviceId: CARD-PROVIDER
+    album-provier:
+      path: /album-service/**
+      serviceId: ALBUM-PROVIDER
+    article-provider:
+      path: /article-service/**
+      serviceId: ARTICLE-PROVIDER
+    photo-provider:
+      path: /photo-service/**
+      serviceId: PHOTO-PROVIDER
+    user-service:
+      path: /user-service/**
+      serviceId: USER-SERVICE
+  prefix: /api
+
+ribbon:
+  ReadTimeout: 3000
+  ConnectTimeout: 1000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
+
+photo-provider:
+  ribbon:
+    ConnectTimeout: 3000
+    ReadTimeout: 60000
+  hystrix:
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 60000
