@@ -6,5 +6,8 @@ spring:
   profiles:
     include:
       - datasource
-      - eureka
       - mybatis
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://45.77.16.125:8301/eureka

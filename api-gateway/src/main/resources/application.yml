@@ -1,18 +1,24 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    inetutils:
+      preferred-networks:
+      - 132.232.36.151
   profiles:
     include:
-      - eureka
       - redis
       - datasource
 server:
   port: 8089
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 132.232.36.151
   client:
     serviceUrl:
-      defaultZone: http://localhost:8301/eureka/
+      defaultZone: http://132.232.36.151:8761/eureka/
 
 zuul:
   routes:
@@ -37,8 +43,8 @@ zuul:
   prefix: /api
 
 ribbon:
-  ReadTimeout: 3000
-  ConnectTimeout: 1000
+  ReadTimeout: 6000
+  ConnectTimeout: 3000
 
 hystrix:
   command:
@@ -46,16 +52,16 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 6000
+            timeoutInMilliseconds: 8000
 
 photo-provider:
   ribbon:
     ConnectTimeout: 3000
-    ReadTimeout: 60000
+    ReadTimeout: 80000
   hystrix:
     command:
       default:
         execution:
           isolation:
             thread:
-              timeoutInMilliseconds: 60000
+              timeoutInMilliseconds: 80000

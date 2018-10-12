@@ -42,7 +42,9 @@ class TokenVerifyFilter(@Autowired val redis: Redis): ZuulFilter() {
     override fun shouldFilter(): Boolean {
         val requestContext = RequestContext.getCurrentContext()
         val uri = requestContext.request.requestURI.toString()
-        return !uri.startsWith("api/login-service/token")
+        println(uri)
+        return false
+//        return !uri.startsWith("api/login-service/token") && !uri.startsWith("api/login-service/hello")
     }
 
     override fun filterType(): String = "pre"
