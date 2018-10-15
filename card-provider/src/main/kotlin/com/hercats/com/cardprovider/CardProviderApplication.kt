@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
 @EnableEurekaClient
-@ComponentScan(value = ["com.hercats.dev.*", "com.hercats.com.*"])
+@ComponentScan(value = ["com.hercat.security.*", "com.hercats.com.*"])
 @MapperScan(value = ["com.hercats.dev.commonbase.mapper"])
 class CardProviderApplication
 
