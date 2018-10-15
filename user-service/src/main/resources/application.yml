@@ -8,6 +8,9 @@ spring:
       - datasource
       - mybatis
 eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 132.232.36.151
   client:
     serviceUrl:
-      defaultZone: http://45.77.16.125:8301/eureka
+      defaultZone: http://132.232.36.151:8761/eureka/

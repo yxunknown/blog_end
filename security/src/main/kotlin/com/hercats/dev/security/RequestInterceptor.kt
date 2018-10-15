@@ -27,10 +27,10 @@ class RequestInterceptor: HandlerInterceptor {
     }
 }
 
-//@Configuration
-//class SecurityWebConfiguration: WebMvcConfigurerAdapter() {
-//    override fun addInterceptors(registry: InterceptorRegistry) {
-//        registry.addInterceptor(RequestInterceptor()).addPathPatterns("/**")
-//        super.addInterceptors(registry)
-//    }
-//}
+@Configuration
+class SecurityWebConfiguration: WebMvcConfigurerAdapter() {
+    override fun addInterceptors(registry: InterceptorRegistry) {
+        registry.addInterceptor(RequestInterceptor()).addPathPatterns("/**")
+        super.addInterceptors(registry)
+    }
+}
