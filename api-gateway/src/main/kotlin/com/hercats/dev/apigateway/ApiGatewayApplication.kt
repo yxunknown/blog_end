@@ -15,7 +15,7 @@ import org.springframework.web.filter.CorsFilter
 @SpringBootApplication
 @EnableZuulProxy
 @EnableEurekaClient
-@ComponentScan(value = ["com.hercats.dev"])
+@ComponentScan(value = ["com.hercats.dev.*", "com.hercat.security.interceptor.configuration.log"])
 class ApiGatewayApplication {
     @Bean
     @LoadBalanced

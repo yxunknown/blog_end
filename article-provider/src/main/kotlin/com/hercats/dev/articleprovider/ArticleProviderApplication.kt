@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
 @EnableEurekaClient
-@ComponentScan(value = ["com.hercats.dev"])
+@ComponentScan(value = ["com.hercats.dev.*", "com.hercat.security.*"])
 @MapperScan(value = ["com.hercats.dev.commonbase.mapper"])
 class ArticleProviderApplication
 

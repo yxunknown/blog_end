@@ -5,6 +5,13 @@ spring:
     name: album-provider
   profiles:
     include:
-      - eureka
       - mybatis
       - datasource
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 132.232.36.151
+  client:
+    serviceUrl:
+      defaultZone: http://132.232.36.151:8761/eureka/
