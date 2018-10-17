@@ -1,24 +1,19 @@
 spring:
   application:
     name: api-gateway
-  cloud:
-    inetutils:
-      preferred-networks:
-      - 132.232.36.151
   profiles:
     include:
       - redis
       - datasource
-server:
-  port: 8089
+      - eureka
 
 eureka:
-  instance:
-    prefer-ip-address: true
-    ip-address: 132.232.36.151
   client:
     serviceUrl:
       defaultZone: http://132.232.36.151:8761/eureka/
+
+server:
+  port: 8089
 
 zuul:
   routes:

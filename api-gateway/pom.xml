@@ -67,13 +67,6 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.hercats.dev</groupId>
-            <artifactId>common-base</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -84,8 +77,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.hercat.security</groupId>
-            <artifactId>interceptor</artifactId>
+            <groupId>com.hercats.dev</groupId>
+            <artifactId>common-base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

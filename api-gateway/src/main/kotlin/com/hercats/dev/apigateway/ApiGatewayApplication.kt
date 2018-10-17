@@ -1,5 +1,6 @@
 package com.hercats.dev.apigateway
 
+import com.hercats.dev.commonbase.configuration.RequestLogConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
@@ -11,11 +12,12 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @SpringBootApplication
 @EnableZuulProxy
 @EnableEurekaClient
-@ComponentScan(value = ["com.hercats.dev.*", "com.hercat.security.interceptor.configuration.log"])
+@ComponentScan(value = ["com.hercats.dev.*"])
 class ApiGatewayApplication {
     @Bean
     @LoadBalanced
@@ -37,6 +39,11 @@ class ApiGatewayApplication {
         config.addAllowedMethod("PATCH")
         source.registerCorsConfiguration("/**", config)
         return CorsFilter(source)
+    }
+
+    @Bean
+    fun requestLog(): WebMvcConfigurer {
+        return RequestLogConfiguration()
     }
 }
 

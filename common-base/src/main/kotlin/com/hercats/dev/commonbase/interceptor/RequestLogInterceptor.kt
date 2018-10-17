@@ -1,4 +1,4 @@
-package com.hercat.security.interceptor.interceptor
+package com.hercats.dev.commonbase.interceptor
 
 import org.springframework.web.servlet.HandlerInterceptor
 import org.springframework.web.servlet.ModelAndView
