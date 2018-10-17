@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class RequestLogConfiguration: WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        println("RequestLogInterceptor init success")
         registry.addInterceptor(RequestLogInterceptor()).addPathPatterns("/**")
     }
 }
