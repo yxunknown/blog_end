@@ -7,10 +7,12 @@ import com.netflix.zuul.ZuulFilter
 import com.netflix.zuul.context.RequestContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.util.logging.Logger
 import javax.servlet.http.HttpServletResponse
 
 @Component
 class TokenVerifyFilter(@Autowired val redis: Redis): ZuulFilter() {
+    private val logger = Logger.getLogger("${this::class.java.`package`.name}.${this::class.java.simpleName}")
 
     override fun run(): Any {
         val requestContext = RequestContext.getCurrentContext()
@@ -42,7 +44,7 @@ class TokenVerifyFilter(@Autowired val redis: Redis): ZuulFilter() {
     override fun shouldFilter(): Boolean {
         val requestContext = RequestContext.getCurrentContext()
         val uri = requestContext.request.requestURI.toString()
-        println(uri)
+        logger.info(uri)
         return false
 //        return !uri.startsWith("api/login-service/token") && !uri.startsWith("api/login-service/hello")
     }

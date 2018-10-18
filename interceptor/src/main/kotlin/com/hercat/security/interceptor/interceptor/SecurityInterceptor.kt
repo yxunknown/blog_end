@@ -17,7 +17,7 @@ class SecurityInterceptor: HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         val authorization = request.getHeader("authorization")
-        return if (!verifyAuthorization(authorization)) {
+        return if (authorization == null || !verifyAuthorization(authorization)) {
             // authorization recognize failed
             response.sendError(401, "Not Authorized")
             false

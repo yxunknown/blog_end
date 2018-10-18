@@ -7,11 +7,6 @@ spring:
       - datasource
       - eureka
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://132.232.36.151:8761/eureka/
-
 server:
   port: 8089
 
@@ -36,6 +31,8 @@ zuul:
       path: /user-service/**
       serviceId: USER-SERVICE
   prefix: /api
+  sensitive-headers: '*'
+
 
 ribbon:
   ReadTimeout: 6000
@@ -48,15 +45,3 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 8000
-
-photo-provider:
-  ribbon:
-    ConnectTimeout: 3000
-    ReadTimeout: 80000
-  hystrix:
-    command:
-      default:
-        execution:
-          isolation:
-            thread:
-              timeoutInMilliseconds: 80000
