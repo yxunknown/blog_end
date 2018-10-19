@@ -5,13 +5,16 @@ import com.netflix.zuul.ZuulFilter
 import com.netflix.zuul.context.RequestContext
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants
 import org.springframework.stereotype.Component
+import java.util.logging.Logger
 
 @Component
 class RouteAuthFilter: ZuulFilter() {
+    val logger = Logger.getLogger("${this::class.java.`package`.name}.${this::class.java.simpleName}")
+
     override fun run(): Any {
-        println("???")
         val ctx = RequestContext.getCurrentContext()
         ctx.addZuulRequestHeader("Authorization", "Basic ${base64("request:admin123")}")
+        logger.info("add basic info success")
         return Any()
     }
 
