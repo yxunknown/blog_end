@@ -35,13 +35,15 @@ zuul:
 
 
 ribbon:
-  ReadTimeout: 6000
-  ConnectTimeout: 3000
+  ReadTimeout: 10000
+  ConnectTimeout: 5000
 
 hystrix:
   command:
     default:
       execution:
+        timeout:
+          enabled: true
         isolation:
           thread:
-            timeoutInMilliseconds: 8000
+            timeoutInMilliseconds: 20000

@@ -9,3 +9,11 @@ spring:
       - mybatis
       - redis
       - eureka
+  cloud:
+    inetutils:
+      preferredNetworks:
+        - 192.168
+        - 10.0
+      ignoredInterfaces:
+        - docker0
+        - veth.*
