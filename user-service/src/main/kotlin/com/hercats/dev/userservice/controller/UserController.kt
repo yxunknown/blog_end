@@ -5,6 +5,8 @@ import com.hercats.dev.commonbase.model.Message
 import com.hercats.dev.commonbase.model.Pagination
 import com.hercats.dev.commonbase.model.User
 import com.hercats.dev.commonbase.model.UserStatus
+import com.hercats.dev.commonbase.tool.mail
+import com.hercats.dev.commonbase.tool.md5
 import com.hercats.dev.commonbase.tool.sha
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable
@@ -57,6 +59,11 @@ class UserController(@Autowired val userMapper: UserMapper) {
             try {
                 if (userMapper.insert(user) == 1) {
                     msg.info = "注册成功，激活邮件已发送到您的注册邮箱，请前往激活"
+                    val url = "http://132.232.36.151:8089/api/user-service/active?userMail=${md5(user.account.toByteArray())}"
+                    mail.to(user.account)
+                            .subject("账户激活")
+                            .html("<html>\n    <body>\n        <div>\n            <p>欢迎来到小黑屋，请点击如下的链接激活您的账户：</p>\n            <a href=\"$url\">点我激活</a>\n        </div>\n    </body>\n</html>")
+                            .send()
                 } else {
                     msg.code = 500
                     msg.info = "数据库操作失败"

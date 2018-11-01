@@ -8,15 +8,6 @@ import java.util.logging.Logger
 
 const val FROM = "hercats@qq.com"
 
-/**
- * spring:
-mail:
-default-encoding: utf-8
-host: smtp.qq.com
-port: 465
-username: hercats@qq.com
-password: ebgqzepicxhdbbji
- */
 @Component
 object mail {
     private var to = ""
