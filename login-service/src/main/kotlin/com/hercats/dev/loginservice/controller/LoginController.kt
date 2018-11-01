@@ -23,7 +23,7 @@ class LoginController(@Autowired val userMapper: UserMapper,
         return msg
     }
 
-    @RequestMapping(value = ["login/token", "login/token/"], method = [RequestMethod.POST])
+    @RequestMapping(value = ["login", "login/"], method = [RequestMethod.POST])
     fun login(user: User): Message {
         val msg = Message()
         when {
@@ -128,6 +128,8 @@ class LoginController(@Autowired val userMapper: UserMapper,
         }
         return msg
     }
+
+
 
     fun setToken(token: Token): Boolean {
         redis del (redis get "${token.username}.token")
