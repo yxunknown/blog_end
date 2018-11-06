@@ -19,9 +19,14 @@ class TokenVerifyFilter(@Autowired val redis: Redis): ZuulFilter() {
         // from query parameters
         val parameters = requestContext.requestQueryParams
         val headers = requestContext.request.headerNames.toList()
+        val uri = requestContext.request.requestURI.toString()
+        logger.info("""
+            |request to $uri with
+            |params: $parameters,
+            |headers: $headers""".trimMargin())
         val token = when {
-            parameters.containsKey("token") -> {
-                parameters["token"]?.first() ?: ""
+            parameters != null &&  parameters.containsKey("token") -> {
+                parameters["token"]?.firstOrNull() ?: ""
             }
             headers.contains("authorization") -> {
                 val auth = requestContext.request.getHeader("authorization")
@@ -44,9 +49,15 @@ class TokenVerifyFilter(@Autowired val redis: Redis): ZuulFilter() {
     override fun shouldFilter(): Boolean {
         val requestContext = RequestContext.getCurrentContext()
         val uri = requestContext.request.requestURI.toString()
-        logger.info(uri)
-        return !uri.startsWith("api/login-service/login/token") &&
-                !uri.startsWith("api/login-service/register")
+        val result = !(uri.startsWith("/api/login-service/login") ||
+                uri.startsWith("/api/user-service/user/register") ||
+                uri.startsWith("/api/user-service/active"))
+        if (result) {
+            logger.info("start token verify.")
+        } else {
+            logger.info("do not need token: $uri")
+        }
+        return result
     }
 
     override fun filterType(): String = "pre"

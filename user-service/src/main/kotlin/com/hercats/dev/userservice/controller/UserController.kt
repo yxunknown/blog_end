@@ -5,9 +5,7 @@ import com.hercats.dev.commonbase.model.Message
 import com.hercats.dev.commonbase.model.Pagination
 import com.hercats.dev.commonbase.model.User
 import com.hercats.dev.commonbase.model.UserStatus
-import com.hercats.dev.commonbase.tool.mail
-import com.hercats.dev.commonbase.tool.md5
-import com.hercats.dev.commonbase.tool.sha
+import com.hercats.dev.commonbase.tool.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -33,7 +31,7 @@ class UserController(@Autowired val userMapper: UserMapper) {
         return msg
     }
 
-    @RequestMapping(value = ["/user", "/user/"], method = [RequestMethod.POST])
+    @RequestMapping(value = ["/user/register", "/user/register/"], method = [RequestMethod.POST])
     fun addUser(user: User): Message {
         fun validate(user: User, message: Message): Boolean {
             var result = true
@@ -77,6 +75,24 @@ class UserController(@Autowired val userMapper: UserMapper) {
         }
         return msg
     }
+
+    @RequestMapping(value = ["/active", "/active/"], method = [RequestMethod.GET])
+    fun activeUser(userMail: String): Message {
+        val msg = Message()
+        if (userMail be blank) {
+            msg error_400 "用户账户为空"
+        } else {
+            val user = User(account = userMail,
+                    status = UserStatus(2, "正常"))
+            if (userMapper.update(user) == 1) {
+                msg ok "用户激活成功"
+            } else {
+                msg error_500 "用户激活失败"
+            }
+        }
+        return msg
+    }
+
 
     @RequestMapping(value = ["/user", "/user/"], method = [RequestMethod.PUT])
     fun updateUser(user: User): Message {

@@ -87,10 +87,3 @@ object mail {
         }
     }
 }
-
-fun main(args: Array<String>) {
-    mail.to("cplzwr@live.cn")
-            .subject("jod mail")
-            .text("hello this is from jod mail in spring application")
-            .send()
-}

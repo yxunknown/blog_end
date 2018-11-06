@@ -129,8 +129,6 @@ class LoginController(@Autowired val userMapper: UserMapper,
         return msg
     }
 
-
-
     fun setToken(token: Token): Boolean {
         redis del (redis get "${token.username}.token")
         redis del (redis get "${token.username}.refresh_token")

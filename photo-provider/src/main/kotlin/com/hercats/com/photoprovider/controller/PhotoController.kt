@@ -6,8 +6,7 @@ import com.hercats.dev.commonbase.model.Message
 import com.hercats.dev.commonbase.model.Pagination
 import com.hercats.dev.commonbase.model.Photo
 import com.hercats.dev.commonbase.model.SqlDate
-import com.hercats.dev.commonbase.tool.getId
-import com.hercats.dev.commonbase.tool.md5
+import com.hercats.dev.commonbase.tool.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.HttpHeaders
@@ -36,40 +35,16 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper,
     }
 
     @RequestMapping(value = ["/photo", "/photo/"], method = [RequestMethod.POST])
-    fun uploadPhoto(photo: Photo, file: MultipartFile?): Message {
+    fun uploadPhoto(photo: Photo): Message {
         val msg = Message()
-        if (file == null) {
-            msg.code = 400
-            msg.info = "照片为空"
+        if (photo.path.isBlank()) {
+            msg error_400 "请提供照片url"
         } else {
-            try {
-                val md5 = md5(file.bytes)
-                val photoExist = photoMapper.selectByExample(Photo(md5 = md5), Pagination()).firstOrNull()
-                if (photoExist == null) {
-                    val storage = saveToFile(file)
-                    if (storage.isNotBlank()) {
-                        photo.uploadDate = SqlDate().toString()
-                        photo.md5 = md5
-                        photo.path = storage
-                        if (photoMapper.insert(photo) == 1) {
-                            msg.info = "上传成功"
-                            msg.map("photo", photoMapper.selectByPrimaryKey(photo.id)
-                                    ?.apply { path = "/photo/download/$id" } ?: "")
-                        } else {
-                            msg.code = 500
-                            msg.info = "上传失败"
-                        }
-                    } else {
-                        msg.code = 500
-                        msg.info = "上传失败"
-                    }
-                } else {
-                    msg.info = "上传成功"
-                    msg.map("photo", photoExist.apply { path = "/photo/download/$id" })
-                }
-            } catch (e: Exception) {
-                msg.code = 500
-                msg.info = e.message ?: "未知错误"
+            if (photoMapper.insert(photo) == 1) {
+                msg ok "上传照片成功"
+                msg.map("photo", photo)
+            } else {
+                msg error_500 "照片存储错误"
             }
         }
         return msg
