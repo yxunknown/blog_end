@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hercats.dev.commonbase.mapper.CatalogMapper">
+    <resultMap id="catalog" type="com.hercats.dev.commonbase.model.ArticleCatalog">
+        <id column="id" property="id"/>
+        <result column="catalog" property="catalog"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="catalog.id"
+            parameterType="com.hercats.dev.commonbase.model.ArticleCatalog">
+        insert into article_catalog
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="catalog.catalog != ''">
+                title
+            </if>
+        </trim>
+        values
+        <trim prefix="(" prefixOverrides="," suffix=")">
+            <if test="album.title != null">
+                #{catalog.catalog}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="select" resultMap="catalog">
+        select * from article_catalog
+    </select>
+</mapper>

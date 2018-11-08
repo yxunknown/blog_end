@@ -170,3 +170,9 @@ interface UserMapper {
     fun deleteByPrimaryKey(@Param("account") account: String): Long
     fun deleteByExample(@Param("user") user: User): Long
 }
+
+@Mapper
+interface CatalogMapper {
+    fun insert(@Param("catalog") catalog: ArticleCatalog): Int
+    fun select(): List<ArticleCatalog>
+}
