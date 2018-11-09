@@ -16,7 +16,7 @@
         </trim>
         values
         <trim prefix="(" prefixOverrides="," suffix=")">
-            <if test="album.title != null">
+            <if test="catalog.catalog != ''">
                 #{catalog.catalog}
             </if>
         </trim>
