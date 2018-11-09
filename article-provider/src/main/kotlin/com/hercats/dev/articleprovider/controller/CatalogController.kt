@@ -24,7 +24,7 @@ class CatalogController(@Autowired val catalogMapper: CatalogMapper) {
     @RequestMapping(value = ["article/catalog", "article/catalog"], method = [RequestMethod.POST])
     fun addCatalog(catalog: ArticleCatalog): Message {
         val msg = Message()
-        if (catalog.catalog be  blank) {
+        if (catalog.catalog be blank) {
             msg error_400 "分类不能为空"
         } else {
             if (catalogMapper.insert(catalog) == 1) {

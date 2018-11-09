@@ -6,7 +6,10 @@ import com.hercats.dev.commonbase.model.Message
 import com.hercats.dev.commonbase.model.Pagination
 import com.hercats.dev.commonbase.model.Photo
 import com.hercats.dev.commonbase.model.SqlDate
-import com.hercats.dev.commonbase.tool.*
+import com.hercats.dev.commonbase.tool.error_400
+import com.hercats.dev.commonbase.tool.error_500
+import com.hercats.dev.commonbase.tool.getId
+import com.hercats.dev.commonbase.tool.ok
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.HttpHeaders
@@ -40,6 +43,7 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper,
         if (photo.path.isBlank()) {
             msg error_400 "请提供照片url"
         } else {
+            photo.uploadDate = SqlDate().toString()
             if (photoMapper.insert(photo) == 1) {
                 msg ok "上传照片成功"
                 msg.map("photo", photo)
