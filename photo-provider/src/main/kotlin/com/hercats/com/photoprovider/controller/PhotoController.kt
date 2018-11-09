@@ -44,6 +44,7 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper,
             msg error_400 "请提供照片url"
         } else {
             photo.uploadDate = SqlDate().toString()
+            println(photo)
             if (photoMapper.insert(photo) == 1) {
                 msg ok "上传照片成功"
                 msg.map("photo", photo)
