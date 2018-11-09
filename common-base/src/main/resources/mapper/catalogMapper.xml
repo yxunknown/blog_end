@@ -11,7 +11,7 @@
         insert into article_catalog
         <trim prefix="(" prefixOverrides="," suffix=")">
             <if test="catalog.catalog != ''">
-                title
+                catalog
             </if>
         </trim>
         values
