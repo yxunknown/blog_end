@@ -151,9 +151,6 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper,
                 val photos = photoMapper.getAlbumPhotos(pagination, albumId)
                 msg.code = 200
                 msg.info = "查询成功"
-                photos.apply {
-                    this.forEach { photo -> photo.path = "http://127.0.0.1:8083/photo/download/${photo.id}" }
-                }
                 msg.map("album", album)
                 msg.map("count", photoMapper.countAlbumPhotos(albumId))
                 msg.map("pagination", pagination)
@@ -164,21 +161,5 @@ class PhotoController(@Autowired val photoMapper: PhotoMapper,
             msg.info = e.message ?: "未知错误"
         }
         return msg
-    }
-
-    fun saveToFile(file: MultipartFile): String {
-        val dir = File(path)
-        if (!dir.exists()) {
-            dir.mkdirs()
-        }
-        return try {
-            val f = File("${dir.path}/${getId()}.${file.originalFilename?.substringAfterLast(".")}")
-            val writer = FileOutputStream(f)
-            writer.write(file.bytes)
-            writer.close()
-            f.toString()
-        } catch (e: Exception) {
-            ""
-        }
     }
 }

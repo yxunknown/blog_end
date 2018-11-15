@@ -21,10 +21,6 @@ fun deBase64(source: String): String {
 }
 
 fun main(args: Array<String>) {
-    println(sha("Loveyx.123"))
-    println(base64("servicecall:servicecall"))
-    //c2VydmljZWNhbGw6c2VydmljZWNhbGw=
-    //c2VydmljZWNhbGw6c2VydmljZWNhbGw=
-    println(deBase64("c2VydmljZWNhbGw6c2VydmljZWNhbGw="))
+    println(sha("12345678"))
 
 }

@@ -3,13 +3,11 @@ package com.hercats.com.cardprovider.controller
 import com.hercats.dev.commonbase.mapper.CardMapper
 import com.hercats.dev.commonbase.mapper.PhotoMapper
 import com.hercats.dev.commonbase.mapper.UserMapper
-import com.hercats.dev.commonbase.model.Card
+import com.hercats.dev.commonbase.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import com.hercats.dev.commonbase.model.Message
-import com.hercats.dev.commonbase.model.Pagination
 import com.hercats.dev.commonbase.tool.*
 
 @RestController
@@ -23,6 +21,7 @@ class CardController(@Autowired val cardMapper: CardMapper,
     @RequestMapping(value = ["/card", "/card/"], method = [RequestMethod.POST])
     fun addCard(card: Card): Message {
         val msg = Message()
+        card.datetime = SqlDate().toString()
         when {
             (card.author.account be blank) -> {
                 msg error_400 "作者不能为空"
@@ -32,10 +31,6 @@ class CardController(@Autowired val cardMapper: CardMapper,
             }
             (card.content be blank) -> {
                 msg error_400 "内容不能为空"
-            }
-            (card.background.id != -1 &&
-                    photoMapper.selectByPrimaryKey(card.background.id) == null) -> {
-                msg error_400 "背景图片信息不存在"
             }
             else -> {
                 try {
@@ -60,7 +55,9 @@ class CardController(@Autowired val cardMapper: CardMapper,
             msg ok "查询成功"
             msg.map("count", cardMapper.count())
             msg.map("pagination", pagination)
-            msg.map("cards", cards)
+            msg.map("cards", cards.groupBy { it.datetime.substringBeforeLast(" ")}
+                    .map { BlackCard(it.key, it.value) }
+                    .toList())
         } catch (e: Exception) {
             e.printStackTrace()
             msg.error_500(e.message ?: "未知错误")

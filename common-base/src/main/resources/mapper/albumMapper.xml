@@ -27,6 +27,9 @@
             <if test="album.description != null">
                 description,
             </if>
+            <if test="album.cover.id != -1">
+                cover,
+            </if>
             <if test="album.createDate != null">
                 create_date
             </if>
@@ -38,6 +41,9 @@
             </if>
             <if test="album.description != null">
                 #{album.description},
+            </if>
+            <if test="album.cover.id != -1">
+                #{album.cover.id},
             </if>
             <if test="album.createDate != null">
                 #{album.createDate}

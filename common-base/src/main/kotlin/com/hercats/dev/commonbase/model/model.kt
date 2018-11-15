@@ -27,7 +27,8 @@ data class Card(
         var content: String = "",
         var background: Photo = Photo(),
         var bgColor: String = "#de1c31",
-        var textColor: String = "#ffffff")
+        var textColor: String = "#ffffff",
+        var datetime: String = "")
 
 data class Photo(
         var id: Int = -1,
@@ -62,6 +63,9 @@ data class Token(
         val tokenExpire: Long = 60 * 60 * 24,
         val refreshToken: String,
         val refreshTokenExpire: Long = tokenExpire * 7)
+
+data class BlackCard(val datetime: String,
+                     val cards: List<Card>)
 
 class Message{
     var code: Int = 200

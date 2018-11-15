@@ -58,11 +58,7 @@ class AlbumController(@Autowired val albumMapper: AlbumMapper) {
                     if (albumMapper.update(album) == 1) {
                         msg.code = 200
                         msg.info = "更新相册信息成功"
-                        msg.map("album", albumMapper.selectByPrimaryKey(album.id)?.apply {
-                            if (cover.id != -1) {
-                                cover.path = "http://127.0.0.1:8083/photo/download/${cover.id}"
-                            }
-                        } ?: "")
+                        msg.map("album", albumMapper.selectByPrimaryKey(album.id) ?: "")
                     } else {
                         msg.code = 500
                         msg.info = "更新相册信息失败"
@@ -85,11 +81,6 @@ class AlbumController(@Autowired val albumMapper: AlbumMapper) {
                 msg.code = 400
                 msg.info = "相册信息不存在"
             } else {
-                album.apply {
-                    if (cover.id != -1) {
-                        cover.path = "http://127.0.0.1:8083/photo/download/${cover.id}"
-                    }
-                }
                 msg.code = 200
                 msg.info = "查询相册信息成功"
                 msg.map("album", album)
@@ -109,13 +100,7 @@ class AlbumController(@Autowired val albumMapper: AlbumMapper) {
             msg.info = "查询成功"
             msg.map("count", albumMapper.count())
             msg.map("pagination", pagination)
-            msg.map("albums", albums.apply {
-                this.forEach { album ->
-                    if (album.cover.id != -1) {
-                        album.cover.path = "http://127.0.0.1:8083/photo/download/${album.cover.id}"
-                    }
-                }
-            })
+            msg.map("albums", albums)
         } catch (e: Exception) {
             msg.code = 500
             msg.info = e.message ?: "未知错误"

@@ -7,13 +7,11 @@
         <result column="content" property="content"/>
         <result column="bg_color" property="bgColor"/>
         <result column="text_color" property="textColor"/>
+        <result column="datetime" property="datetime"/>
         <association property="author" javaType="com.hercats.dev.commonbase.model.User">
             <id column="user_account" property="account"/>
             <result column="user_brief" property="brief"/>
             <result column="user_nickname" property="nickname"/>
-        </association>
-        <association property="background" javaType="com.hercats.dev.commonbase.model.Photo">
-            <id column="bg_id" property="id"/>
         </association>
     </resultMap>
 
@@ -29,14 +27,14 @@
             <if test="card.content != ''">
                 content,
             </if>
-            <if test="card.background.id != -1">
-                background,
-            </if>
             <if test="card.bgColor != ''">
                 bg_color,
             </if>
             <if test="card.textColor != ''">
-                text_color
+                text_color,
+            </if>
+            <if test="card.datetime !=''">
+                datetime
             </if>
         </trim>
         values
@@ -47,14 +45,14 @@
             <if test="card.content != ''">
                 #{card.content},
             </if>
-            <if test="card.background.id != -1">
-                #{card.background.id},
-            </if>
             <if test="card.bgColor != ''">
                 #{card.bgColor},
             </if>
             <if test="card.textColor != ''">
-                #{card.textColor}
+                #{card.textColor},
+            </if>
+            <if test="card.datetime !=''">
+                #{card.datetime}
             </if>
         </trim>
     </insert>
@@ -69,13 +67,13 @@
         card.content,
         card.bg_color,
         card.text_color,
+        card.datetime,
         user.account as user_account,
         user.brief as user_brief,
-        user.nickname as user_nickname,
-        photo.id as bg_id
+        user.nickname as user_nickname
         from card
         left join user on card.author = user.account
-        left join photo on card.background = photo.id
+        order by id desc
         limit #{pagination.start}, #{pagination.limit}
     </select>
 
@@ -85,13 +83,12 @@
         card.content,
         card.bg_color,
         card.text_color,
+        card.datetime,
         user.account as user_account,
         user.brief as user_brief,
-        user.nickname as user_nickname,
-        photo.id as bg_id
+        user.nickname as user_nickname
         from card
         left join user on card.author = user.account
-        left join photo on card.background = photo.id
         where card.id = #{id}
     </select>
 
@@ -101,14 +98,14 @@
             <if test="card.content != ''">
                 content = #{card.content},
             </if>
-            <if test="card.background.id != -1">
-                background = #{card.background.id},
-            </if>
             <if test="card.bgColor != '#de1c31'">
                 bg_color = #{card.bgColor},
             </if>
             <if test="card.textColor != '#ffffff'">
-                text_color = #{card.textColor}
+                text_color = #{card.textColor},
+            </if>
+            <if test="card.datetime != ''">
+                datetime = #{card.datetime}
             </if>
         </set>
         where card.id = #{card.id}
