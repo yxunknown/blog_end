@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://45.77.16.125:3306/blog?characterEncoding=utf8&useSSL=true
-    username: blog
-    password: blog
-    name: blog
+    url: jdbc:mysql://{hostname}:{port}/{database}?characterEncoding=utf8&useSSL=true
+    username: username
+    password: password
+    name: database
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     dbcp2:
